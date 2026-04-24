@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <!-- Customer List View -->
+        <record id="store_customer_view_list" model="ir.ui.view">
+            <field name="name">store.customer.view.list</field>
+            <field name="model">store.customer</field>
+            <field name="arch" type="xml">
+                <list string="ลูกค้า" decoration-info="customer_type=='member'" decoration-success="customer_type=='vip'">
+                    <field name="customer_code" class="fw-bold" optional="show"/>
+                    <field name="name"/>
+                    <field name="phone"/>
+                    <field name="email"/>
+                    <field name="customer_type" widget="badge"/>
+                    <field name="member_since"/>
+                    <field name="sale_count"/>
+                    <field name="total_spent"/>
+                </list>
+            </field>
+        </record>
+
+        <!-- Customer Form View -->
+        <record id="store_customer_view_form" model="ir.ui.view">
+            <field name="name">store.customer.view.form</field>
+            <field name="model">store.customer</field>
+            <field name="arch" type="xml">
+                <form string="ลูกค้า">
+                    <header>
+                        <button name="unlink" type="object" string="ลบข้อมูลลูกค้านี้" class="btn-danger" confirm="ยืนยันการลบข้อมูลลูกค้านี้แบบถาวร?"/>
+                    </header>
+                    <sheet>
+                        <field name="image" widget="image" class="oe_avatar"/>
+                        <div class="oe_title">
+                            <h1>
+                                <field name="name" placeholder="ชื่อลูกค้า"/>
+                            </h1>
+                            <h3>
+                                <field name="customer_code" placeholder="รหัสลูกค้า"/>
+                            </h3>
+                        </div>
+                        <group>
+                            <group string="ข้อมูลการติดต่อ">
+                                <field name="phone" widget="phone"/>
+                                <field name="email" widget="email"/>
+                                <field name="address"/>
+                            </group>
+                            <group string="ข้อมูลสมาชิก">
+                                <field name="customer_type" widget="radio"/>
+                                <field name="member_since"/>
+                                <field name="sale_count"/>
+                                <field name="total_spent"/>
+                                <field name="active" invisible="1"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="รายการซื้อ">
+                                <field name="sale_ids" readonly="1">
+                                    <list>
+                                        <field name="name"/>
+                                        <field name="sale_date"/>
+                                        <field name="employee_id"/>
+                                        <field name="total_amount"/>
+                                        <field name="state" widget="badge"/>
+                                    </list>
+                                </field>
+                            </page>
+                            <page string="หมายเหตุ">
+                                <field name="notes" placeholder="หมายเหตุเพิ่มเติม..."/>
+                            </page>
+                        </notebook>
+                    </sheet>
+                    <chatter/>
+                </form>
+            </field>
+        </record>
+
+        <!-- Customer Search View -->
+        <record id="store_customer_view_search" model="ir.ui.view">
+            <field name="name">store.customer.view.search</field>
+            <field name="model">store.customer</field>
+            <field name="arch" type="xml">
+                <search string="ค้นหาลูกค้า">
+                    <field name="name"/>
+                    <field name="customer_code"/>
+                    <field name="phone"/>
+                    <field name="email"/>
+                    <separator/>
+                    <filter string="สมาชิก" name="member" domain="[('customer_type','=','member')]"/>
+                    <filter string="VIP" name="vip" domain="[('customer_type','=','vip')]"/>
+                    <separator/>
+                    <filter string="ไม่ใช้งาน" name="inactive" domain="[('active','=',False)]"/>
+                    <group>
+                        <filter string="ประเภทลูกค้า" name="group_type" domain="[]" context="{'group_by': 'customer_type'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <!-- Customer Kanban View -->
+        <record id="store_customer_view_kanban" model="ir.ui.view">
+            <field name="name">store.customer.view.kanban</field>
+            <field name="model">store.customer</field>
+            <field name="arch" type="xml">
+                <kanban>
+                    <field name="image"/>
+                    <templates>
+                        <t t-name="card" class="flex-row">
+                            <aside class="o_kanban_aside_full">
+                                <t t-if="record.image.raw_value">
+                                    <field name="image" widget="image" options="{'size': [90, 90]}"/>
+                                </t>
+                                <div t-else="" class="d-flex align-items-center justify-content-center bg-100 bg-gradient" style="width:90px;height:90px;">
+                                    <i class="fa fa-user fa-3x text-muted opacity-50"/>
+                                </div>
+                            </aside>
+                            <main class="ms-3 py-2 d-flex flex-column justify-content-center">
+                                <field name="name" class="fw-bolder fs-5 text-dark mb-1"/>
+                                <div class="text-muted small mb-1">
+                                    <i class="fa fa-phone me-1"/>
+                                    <field name="phone" widget="phone"/>
+                                </div>
+                                <div class="d-flex align-items-center mt-auto gap-2">
+                                    <field name="customer_type" widget="badge" decoration-success="customer_type=='vip'" decoration-info="customer_type=='member'" decoration-warning="customer_type=='regular'"/>
+                                    <div class="text-muted small">
+                                        <i class="fa fa-hashtag me-1"/>
+                                        <field name="customer_code"/>
+                                    </div>
+                                </div>
+                            </main>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
+        <!-- Customer Action -->
+        <record id="action_store_customer" model="ir.actions.act_window">
+            <field name="name">ลูกค้า</field>
+            <field name="res_model">store.customer</field>
+            <field name="view_mode">kanban,list,form</field>
+            <field name="search_view_id" ref="store_customer_view_search"/>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                เพิ่มลูกค้าคนแรก
+                </p>
+            </field>
+        </record>
+
+    </data>
+</odoo>

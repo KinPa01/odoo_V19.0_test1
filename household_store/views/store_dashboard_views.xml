@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Dashboard Action -->
+    <record id="action_store_dashboard" model="ir.actions.act_window">
+        <field name="name">แดชบอร์ด</field>
+        <field name="res_model">store.sale</field>
+        <field name="view_mode">graph,pivot,list</field>
+        <field name="domain">[('state','=','confirmed')]</field>
+    </record>
+
+</odoo>
