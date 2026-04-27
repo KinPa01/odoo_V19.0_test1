@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Top Menu -->
+    <menuitem id="menu_household_store_root"
+              name="ร้านค้าของใช้"
+              sequence="5"
+              web_icon="household_store,static/description/icon.png"/>
+
+    <!-- Dashboard -->
+    <menuitem id="menu_store_dashboard"
+              name="แดชบอร์ด"
+              parent="menu_household_store_root"
+              action="action_store_dashboard"
+              sequence="1"/>
+
+    <!-- Sales Menu -->
+    <menuitem id="menu_store_sales"
+              name="การขาย"
+              parent="menu_household_store_root"
+              sequence="10"/>
+
+    <menuitem id="menu_store_sale_orders"
+              name="รายการขาย"
+              parent="menu_store_sales"
+              action="action_store_sale"
+              sequence="1"/>
+
+    <!-- Products Menu -->
+    <menuitem id="menu_store_products"
+              name="สินค้า"
+              parent="menu_household_store_root"
+              sequence="20"/>
+
+    <menuitem id="menu_store_product_list"
+              name="รายการสินค้า"
+              parent="menu_store_products"
+              action="action_store_product"
+              sequence="1"/>
+
+    <menuitem id="menu_store_product_categories"
+              name="หมวดหมู่สินค้า"
+              parent="menu_store_products"
+              action="action_store_product_category"
+              sequence="2"/>
+
+    <!-- Customers Menu -->
+    <menuitem id="menu_store_customers"
+              name="ลูกค้า"
+              parent="menu_household_store_root"
+              action="action_store_customer"
+              sequence="30"/>
+
+    <!-- Employees Menu -->
+    <menuitem id="menu_store_employees"
+              name="พนักงาน"
+              parent="menu_household_store_root"
+              action="action_store_employee"
+              sequence="40"/>
+
+</odoo>
