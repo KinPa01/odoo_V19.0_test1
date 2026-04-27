@@ -1,7 +1,0 @@
-id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-access_store_customer,store.customer,model_store_customer,base.group_user,1,1,1,1
-access_store_employee,store.employee,model_store_employee,base.group_user,1,1,1,1
-access_store_product_category,store.product.category,model_store_product_category,base.group_user,1,1,1,1
-access_store_product,store.product,model_store_product,base.group_user,1,1,1,1
-access_store_sale,store.sale,model_store_sale,base.group_user,1,1,1,1
-access_store_sale_line,store.sale.line,model_store_sale_line,base.group_user,1,1,1,1
