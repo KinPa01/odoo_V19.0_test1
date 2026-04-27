@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Report Action -->
+        <record id="action_report_pos_food_order" model="ir.actions.report">
+            <field name="name">ใบเสร็จรับเงิน (Receipt)</field>
+            <field name="model">pos.food.order</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">Pos_food.report_pos_food_order_receipt</field>
+            <field name="report_file">Pos_food.report_pos_food_order_receipt</field>
+            <field name="print_report_name">'Receipt - %s' % (object.name)</field>
+            <field name="binding_model_id" ref="Pos_food.model_pos_food_order"/>
+            <field name="binding_type">report</field>
+        </record>
+
+        <!-- Report Template -->
+        <template id="report_pos_food_order_receipt">
+            <t t-call="web.html_container">
+                <t t-foreach="docs" t-as="doc">
+                    <t t-call="web.external_layout">
+                        <div class="page">
+                            <div class="text-center" style="margin-bottom: 30px;">
+                                <h2>ใบเสร็จรับเงิน (Receipt)</h2>
+                            </div>
+                            <div class="row mt32 mb32">
+                                <div class="col-6">
+                                    <strong>เลขที่บิล:</strong> <span t-field="doc.name"/><br/>
+                                    <strong>พนักงาน:</strong> <span t-field="doc.waiter_id.name"/><br/>
+                                    <strong>วันที่:</strong> <span t-field="doc.create_date" t-options='{"widget": "datetime"}'/>
+                                </div>
+                                <div class="col-6 text-end">
+                                    <strong>โต๊ะ:</strong> <span t-field="doc.table_id.name"/><br/>
+                                    <strong>สถานะ:</strong> <span t-field="doc.state"/>
+                                </div>
+                            </div>
+
+                            <table class="table table-sm o_main_table" style="margin-top: 20px;">
+                                <thead>
+                                    <tr>
+                                        <th>รายการอาหาร</th>
+                                        <th class="text-center">จำนวน</th>
+                                        <th class="text-end">ราคา/หน่วย</th>
+                                        <th class="text-end">รวม</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <t t-foreach="doc.line_ids" t-as="line">
+                                        <tr>
+                                            <td><span t-field="line.menu_id.name"/></td>
+                                            <td class="text-center"><span t-field="line.quantity"/></td>
+                                            <td class="text-end"><span t-field="line.price_unit"/></td>
+                                            <td class="text-end"><span t-field="line.subtotal"/></td>
+                                        </tr>
+                                    </t>
+                                </tbody>
+                            </table>
+
+                            <div class="row">
+                                <div class="col-8"></div>
+                                <div class="col-4">
+                                    <table class="table table-sm" style="margin-top: 20px;">
+                                        <tr class="border-black o_total">
+                                            <td><strong>ยอดรวมทั้งสิ้น</strong></td>
+                                            <td class="text-end">
+                                                <strong><span t-field="doc.total_amount"/> ฿</strong>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+                            
+                            <div class="text-center" style="margin-top: 50px;">
+                                <p>*** ขอบคุณที่ใช้บริการครับ/ค่ะ ***</p>
+                            </div>
+                        </div>
+                    </t>
+                </t>
+            </t>
+        </template>
+    </data>
+</odoo>

@@ -1,0 +1,20 @@
+{
+    'name': 'POS Food / Restaurant Management',
+    'version': '1.0',
+    'summary': 'Manage Restaurant Menus, Tables, and Orders',
+    'description': 'A module for managing a restaurant POS system.',
+    'category': 'Sales/Point of Sale',
+    'author': 'Your Name',
+    'depends': ['base', 'point_of_sale'],
+    'data': [
+        'security/ir.model.access.csv',
+        'views/pos_food_menu_views.xml',
+        'views/pos_food_table_views.xml',
+        'views/pos_food_order_views.xml',
+        'views/pos_food_ingredient_views.xml',
+        'reports/pos_food_order_report.xml',
+    ],
+    'installable': True,
+    'application': True,
+    'license': 'LGPL-3',
+}

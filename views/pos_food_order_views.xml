@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Form View -->
+        <record id="view_pos_food_order_form" model="ir.ui.view">
+            <field name="name">pos.food.order.form</field>
+            <field name="model">pos.food.order</field>
+            <field name="arch" type="xml">
+                <form>
+                    <header>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,cooking,served,paid" options="{'clickable': '1'}"/>
+                    </header>
+                    <sheet>
+                        <div class="oe_title">
+                            <h1>
+                                <field name="name" readonly="1"/>
+                            </h1>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="table_id"/>
+                                <field name="waiter_id"/>
+                            </group>
+                            <group>
+                                <field name="total_amount"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="รายการอาหาร">
+                                <field name="line_ids">
+                                    <list editable="bottom">
+                                        <field name="menu_image" widget="image" options="{'size': [50, 50]}"/>
+                                        <field name="menu_id"/>
+                                        <field name="price_unit" readonly="1"/>
+                                        <field name="quantity"/>
+                                        <field name="subtotal" readonly="1" sum="Total"/>
+                                    </list>
+                                </field>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- List View -->
+        <record id="view_pos_food_order_list" model="ir.ui.view">
+            <field name="name">pos.food.order.list</field>
+            <field name="model">pos.food.order</field>
+            <field name="arch" type="xml">
+                <list>
+                    <field name="name"/>
+                    <field name="table_id"/>
+                    <field name="total_amount" sum="Total Sales"/>
+                    <field name="state" widget="badge" decoration-info="state == 'draft'" decoration-warning="state == 'cooking'" decoration-success="state == 'paid'"/>
+                </list>
+            </field>
+        </record>
+
+        <!-- Graph View -->
+        <record id="view_pos_food_order_graph" model="ir.ui.view">
+            <field name="name">pos.food.order.graph</field>
+            <field name="model">pos.food.order</field>
+            <field name="arch" type="xml">
+                <graph string="Sales Analysis" type="bar">
+                    <field name="table_id" type="row"/>
+                    <field name="total_amount" type="measure"/>
+                </graph>
+            </field>
+        </record>
+
+        <!-- Pivot View -->
+        <record id="view_pos_food_order_pivot" model="ir.ui.view">
+            <field name="name">pos.food.order.pivot</field>
+            <field name="model">pos.food.order</field>
+            <field name="arch" type="xml">
+                <pivot string="Sales Analysis">
+                    <field name="waiter_id" type="row"/>
+                    <field name="table_id" type="col"/>
+                    <field name="total_amount" type="measure"/>
+                </pivot>
+            </field>
+        </record>
+
+        <!-- Kitchen List View -->
+        <record id="view_pos_food_order_line_kitchen_list" model="ir.ui.view">
+            <field name="name">pos.food.order.line.kitchen.list</field>
+            <field name="model">pos.food.order.line</field>
+            <field name="arch" type="xml">
+                <list create="0" delete="0" decoration-danger="state == 'draft'" decoration-warning="state == 'cooking'">
+                    <field name="order_id" readonly="1"/>
+                    <field name="menu_id" readonly="1"/>
+                    <field name="quantity" readonly="1"/>
+                    <field name="state" widget="badge" decoration-info="state == 'draft'" decoration-warning="state == 'cooking'" decoration-success="state == 'served'"/>
+                    <button name="action_done" string="เสิร์ฟแล้ว" type="object" class="btn-primary" icon="fa-check" invisible="state == 'served'"/>
+                </list>
+            </field>
+        </record>
+
+        <!-- Search View for Order Lines (Kitchen) -->
+        <record id="view_pos_food_order_line_search" model="ir.ui.view">
+            <field name="name">pos.food.order.line.search</field>
+            <field name="model">pos.food.order.line</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="order_id" string="บิล"/>
+                    <field name="menu_id" string="เมนู"/>
+                    <filter string="รอทำ" name="draft" domain="[('state', '=', 'draft')]"/>
+                    <filter string="กำลังทำ" name="cooking" domain="[('state', '=', 'cooking')]"/>
+                    <separator/>
+                    <filter string="ยังไม่เสิร์ฟ" name="not_served" domain="[('state', '!=', 'served')]"/>
+                </search>
+            </field>
+        </record>
+
+        <!-- Kitchen Action -->
+        <record id="action_pos_food_kitchen" model="ir.actions.act_window">
+            <field name="name">หน้าจอห้องครัว (KDS)</field>
+            <field name="res_model">pos.food.order.line</field>
+            <field name="view_mode">list</field>
+            <field name="domain">[('state', '!=', 'served')]</field>
+            <field name="context">{'search_default_not_served': 1}</field>
+        </record>
+
+        <!-- Action: Active Orders -->
+        <record id="action_pos_food_order" model="ir.actions.act_window">
+            <field name="name">กำลังรับออเดอร์ (Active)</field>
+            <field name="res_model">pos.food.order</field>
+            <field name="view_mode">list,form</field>
+            <field name="domain">[('state', '!=', 'paid')]</field>
+        </record>
+
+        <!-- Action: Paid Orders -->
+        <record id="action_pos_food_order_paid" model="ir.actions.act_window">
+            <field name="name">ประวัติยอดขาย (ชำระแล้ว)</field>
+            <field name="res_model">pos.food.order</field>
+            <field name="view_mode">list,form,graph,pivot</field>
+            <field name="domain">[('state', '=', 'paid')]</field>
+        </record>
+
+        <!-- Menus -->
+        <menuitem id="menu_pos_food_kitchen" name="ห้องครัว (KDS)" action="action_pos_food_kitchen" parent="menu_pos_food_root" sequence="25"/>
+        <menuitem id="menu_pos_food_order" name="กำลังรับออเดอร์" action="action_pos_food_order" parent="menu_pos_food_root" sequence="30"/>
+        <menuitem id="menu_pos_food_sales" name="ประวัติยอดขาย" action="action_pos_food_order_paid" parent="menu_pos_food_root" sequence="35"/>
+    </data>
+</odoo>

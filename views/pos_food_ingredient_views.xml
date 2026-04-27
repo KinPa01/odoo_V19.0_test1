@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_pos_food_ingredient_form" model="ir.ui.view">
+            <field name="name">pos.food.ingredient.form</field>
+            <field name="model">pos.food.ingredient</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <group>
+                            <field name="name"/>
+                            <field name="unit"/>
+                            <field name="stock_quantity"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_pos_food_ingredient_list" model="ir.ui.view">
+            <field name="name">pos.food.ingredient.list</field>
+            <field name="model">pos.food.ingredient</field>
+            <field name="arch" type="xml">
+                <list editable="bottom">
+                    <field name="name"/>
+                    <field name="unit"/>
+                    <field name="stock_quantity"/>
+                </list>
+            </field>
+        </record>
+
+        <record id="action_pos_food_ingredient" model="ir.actions.act_window">
+            <field name="name">คลังวัตถุดิบ (Ingredients)</field>
+            <field name="res_model">pos.food.ingredient</field>
+            <field name="view_mode">list,form</field>
+        </record>
+
+        <menuitem id="menu_pos_food_ingredient" name="คลังวัตถุดิบ" action="action_pos_food_ingredient" parent="menu_pos_food_root" sequence="40"/>
+    </data>
+</odoo>

@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Form View -->
+        <record id="view_pos_food_table_form" model="ir.ui.view">
+            <field name="name">pos.food.table.form</field>
+            <field name="model">pos.food.table</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="name"/>
+                                <field name="capacity"/>
+                            </group>
+                            <group>
+                                <field name="state" widget="badge" decoration-success="state == 'available'" decoration-danger="state == 'occupied'" decoration-warning="state == 'reserved'"/>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- List View -->
+        <record id="view_pos_food_table_list" model="ir.ui.view">
+            <field name="name">pos.food.table.list</field>
+            <field name="model">pos.food.table</field>
+            <field name="arch" type="xml">
+                <list>
+                    <field name="name"/>
+                    <field name="capacity"/>
+                    <field name="state" widget="badge" decoration-success="state == 'available'" decoration-danger="state == 'occupied'" decoration-warning="state == 'reserved'"/>
+                </list>
+            </field>
+        </record>
+
+        <!-- Action to Create Order -->
+        <record id="action_pos_food_order_create_from_table" model="ir.actions.act_window">
+            <field name="name">เปิดบิลรับออเดอร์</field>
+            <field name="res_model">pos.food.order</field>
+            <field name="view_mode">form</field>
+            <field name="target">current</field>
+        </record>
+
+        <!-- Kanban View -->
+        <record id="view_pos_food_table_kanban" model="ir.ui.view">
+            <field name="name">pos.food.table.kanban</field>
+            <field name="model">pos.food.table</field>
+            <field name="arch" type="xml">
+                <kanban>
+                    <field name="id"/>
+                    <field name="name"/>
+                    <field name="capacity"/>
+                    <field name="state"/>
+                    <templates>
+                        <t t-name="card">
+                            <div class="oe_kanban_global_click" t-attf-style="border-radius: 10px; padding: 15px; border-left: 8px solid {{record.state.raw_value == 'available' ? '#28a745' : (record.state.raw_value == 'occupied' ? '#dc3545' : '#ffc107')}};">
+                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                                    <strong style="font-size: 20px;">โต๊ะ                                        <field name="name"/>
+                                    </strong>
+                                    <div style="display: flex; align-items: center; gap: 10px;">
+                                        <field name="state" widget="badge" decoration-success="state == 'available'" decoration-danger="state == 'occupied'" decoration-warning="state == 'reserved'"/>
+                                        <button type="object" name="unlink" class="btn btn-link text-danger p-0" confirm="ยืนยันการลบโต๊ะนี้?">
+                                            <i class="fa fa-trash" style="font-size: 18px;"/>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div style="font-size: 16px; color: #555; margin-bottom: 20px;">
+                                    จำนวนเก้าอี้:        
+                                    <field name="capacity"/>
+ที่นั่ง
+                                </div>
+                                <div style="text-align: center;">
+                                    <button type="action" name="%(action_pos_food_order_create_from_table)d" class="btn btn-primary" context="{'default_table_id': id}" style="width: 100%;">
+                                        เปิดบิลสั่งอาหาร
+                                    </button>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
+        <!-- Action -->
+        <record id="action_pos_food_table" model="ir.actions.act_window">
+            <field name="name">โต๊ะ</field>
+            <field name="res_model">pos.food.table</field>
+            <field name="view_mode">kanban,list,form</field>
+        </record>
+
+        <!-- Menu for Tables -->
+        <menuitem id="menu_pos_food_table" name="จัดการโต๊ะ" action="action_pos_food_table" parent="menu_pos_food_root" sequence="20"/>
+    </data>
+</odoo>

@@ -1,0 +1,7 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_pos_food_menu,pos.food.menu,model_pos_food_menu,,1,1,1,1
+access_pos_food_table,pos.food.table,model_pos_food_table,,1,1,1,1
+access_pos_food_order,pos.food.order,model_pos_food_order,,1,1,1,1
+access_pos_food_order_line,pos.food.order.line,model_pos_food_order_line,,1,1,1,1
+access_pos_food_ingredient,pos.food.ingredient,model_pos_food_ingredient,,1,1,1,1
+access_pos_food_recipe_line,pos.food.recipe.line,model_pos_food_recipe_line,,1,1,1,1
